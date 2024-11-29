@@ -1,0 +1,23 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: canary-ingress
+  namespace: canary-test
+  annotations:
+    cert-manager.io/cluster-issuer: grepsr-platform-issuer
+    kubernetes.io/ingress.class: svc-ingress
+    nginx.ingress.kubernetes.io/canary: "true"
+    nginx.ingress.kubernetes.io/canary-by-header: "VERSION"
+    nginx.ingress.kubernetes.io/canary-by-header-value: "2"
+spec:
+  rules:
+  - host: canary.int.grepsr.net
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: service-deploy2
+            port:
+              number: 80

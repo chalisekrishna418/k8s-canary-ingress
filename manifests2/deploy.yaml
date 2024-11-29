@@ -1,0 +1,30 @@
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: deploy2
+  namespace: canary-test
+  labels:
+    app: deploy2
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: deploy2
+  template:
+    metadata:
+      labels:
+        app: deploy2
+    spec:
+      containers:
+      - name: custom-server
+        image: nginx:latest
+        ports:
+        - containerPort: 80
+        volumeMounts:
+        - name: html-volume
+          mountPath: /usr/share/nginx/html
+      volumes:
+      - name: html-volume
+        configMap:
+          name: deploy2-html
